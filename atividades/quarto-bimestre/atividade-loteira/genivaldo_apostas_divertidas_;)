@@ -1,0 +1,391 @@
+<?php
+
+$valores = [
+    "megasena" => [5, 35, 140, 420, 1050, 2310, 4620, 8500, 15015, 25025, 40040, 61880, 92820, 135660, 193800],
+    
+    "quina" => [2.5, 15, 52.5, 140, 315, 630, 1155, 1980, 3217.5, 5005, 7507.5],
+    
+    "lotomania" => [3],
+    
+    "lotofacil" => [3, 48, 408, 2448, 11628, 46512]
+];
+
+$jogos = array("Mega-Sena", "Quina", "Lotomania", "Lotofácil");
+
+menu($jogos);
+escolha($jogos, $valores);
+
+function menu($jogos) {
+
+    fazer_cabecalho("Menu");
+
+    for($i = 0; $i < 4; $i++) {
+        
+        print($i + 1 . " - ");
+        print_r ($jogos[$i] . "\n");
+        
+    }
+
+}
+
+function escolha($jogos, $valores) {
+
+    print("\n");
+
+    $quantidade_apostas = array();
+
+    $escolhido = readline("Escolha como tu quer perder dinheiro!!! \u{1F602} ");
+    
+    system('clear');
+
+    cabecalho_escolhas($jogos, $escolhido);
+
+    $vezes = readline("Quantas apostas tu que? ");
+
+    print("\n");
+
+    if ($jogos[$escolhido - 1] == "Mega-Sena") {
+
+        $quantidade_apostas = megasena($vezes);
+
+        $valor_total = 0;
+
+        foreach ($quantidade_apostas as $aposta) {
+
+            $valor_total += $valores["megasena"][$aposta - 6];
+
+        }
+
+        print("\nO valor a ser pago é de R$ $valor_total");
+    }
+
+    else if ($jogos[$escolhido - 1] == "Quina") {
+        $quantidade_apostas = quina($vezes);
+
+        $valor_total = 0;
+
+        foreach ($quantidade_apostas as $aposta) {
+            $valor_total += $valores["quina"][$aposta - 5];
+        }
+        
+        print("\nO valor a ser pago é de R$ $valor_total");
+    }
+
+    else if ($jogos[$escolhido - 1] == "Lotomania") {
+        $quantidade_apostas = lotomania($vezes);
+
+        $valor_total = 0;
+
+        foreach ($quantidade_apostas as $aposta) {
+            $valor_total += $valores["lotomania"];
+        }
+        
+        print("\nO valor a ser pago é de R$ $valor_total");
+    }
+
+    else if ($jogos[$escolhido - 1] == "Lotofácil") {
+        $quantidade_apostas = lotofacil($vezes);
+
+        $valor_total = 0;
+
+        foreach ($quantidade_apostas as $aposta) {
+            $valor_total += $valores["lotofacil"][$aposta - 15];
+        }
+        
+        print("\nO valor a ser pago é de R$ $valor_total");
+    }
+}
+
+function megasena($vezes): array {
+    
+    $quantidade = array();
+    $totalaposta = 0;
+
+    do {
+
+        do {
+
+            print("\t* Quantos números tu quer?\n");
+            print("O mínimo são 6 números e o máximo são 20. ");
+            $dezenas = readline("");
+
+            if ($dezenas < 6 or $dezenas > 20) {
+                print("\tValor inválido, tente novamente!\n");
+            }
+            else {
+                break;
+            }
+            
+                
+        } while(true);
+
+
+        do {
+            
+            $infoaposta = readline("Quantas apostas tu que com essa quantia de números? ");
+
+        } while($totalaposta + $infoaposta > $vezes);
+        
+        $totalaposta += $infoaposta; 
+
+        print("\n");
+        
+        for($i = 0; $i < $infoaposta; $i++) {
+            array_push($quantidade, $dezenas);
+        }
+
+
+        
+    } while($totalaposta < $vezes);
+
+    sort($quantidade);
+
+    foreach ($quantidade as $dezena) {
+
+        $numeros_sorteados = array();
+        
+        $numeros_sorteados = sorteia(1, 60, $dezena);
+
+        sort($numeros_sorteados);
+        
+        for ($i = 0; $i < sizeof($numeros_sorteados); $i++) {
+            if ($i == sizeof($numeros_sorteados) - 1) {
+                print($numeros_sorteados[$i]);
+            }
+            else {
+                printf("%-4s", $numeros_sorteados[$i]);
+            }
+        }
+
+        print("\n");
+    }
+
+    return $quantidade;
+        
+}
+
+function quina($vezes): array {
+    
+    $quantidade = array();
+    $totalaposta = 0;
+
+    do {
+
+        do {
+
+            print("\t* Quantos números tu quer?\n");
+            print("O mínimo são 5 números e o máximo são 15. ");
+            $dezenas = readline("");
+
+            if ($dezenas < 5 or $dezenas > 15) {
+                print("\tValor inválido, tente novamente!\n");
+            }
+            else {
+                break;
+            }
+            
+                
+        } while(true);
+
+
+        do {
+            
+            $infoaposta = readline("Quantas apostas tu que com essa quantia de números?");
+
+        } while($totalaposta + $infoaposta > $vezes);
+        
+        $totalaposta += $infoaposta; 
+
+        print("\n");
+        
+        for($i = 0; $i < $infoaposta; $i++) {
+            array_push($quantidade, $dezenas);
+        }
+
+
+    } while($totalaposta < $vezes);
+
+    sort($quantidade);
+
+    foreach ($quantidade as $dezena) {
+
+        $numeros_sorteados = array();
+        
+        $numeros_sorteados = sorteia(1, 80, $dezena);
+
+        sort($numeros_sorteados);
+        
+        for ($i = 0; $i < sizeof($numeros_sorteados); $i++) {
+            if ($i == sizeof($numeros_sorteados) - 1) {
+                print($numeros_sorteados[$i]);
+            }
+            else {
+                printf("%-4s", $numeros_sorteados[$i]);
+            }
+        }
+
+        print("\n");
+    }
+
+    return $quantidade;
+
+        
+}
+
+function lotomania($vezes): array {
+    
+    $quantidade = array();
+    $totalaposta = 0;
+
+    do {
+
+        do {
+
+            print("\t* Quantos números tu quer?\n");
+            print("O mínimo são 0 números e o máximo são 99. ");
+            $dezenas = readline("");
+
+            if ($dezenas < 0 or $dezenas > 99) {
+                print("\tValor inválido, tente novamente!\n");
+            }
+            else {
+                break;
+            }
+            
+                
+        } while(true);
+
+
+        do {
+            
+            $infoaposta = readline("Quantas apostas tu que com essa quantia de números?");
+
+        } while($totalaposta + $infoaposta > $vezes);
+        
+        $totalaposta += $infoaposta; 
+
+        print("\n");
+        
+        for($i = 0; $i < $infoaposta; $i++) {
+            array_push($quantidade, $dezenas);
+        }
+
+
+    } while($totalaposta < $vezes);
+    
+    sort($quantidade);
+
+    foreach ($quantidade as $dezena) {
+
+        $numeros_sorteados = array();
+        
+        $numeros_sorteados = sorteia(0, 90, $dezena);
+
+        sort($numeros_sorteados);
+        
+        for ($i = 0; $i < sizeof($numeros_sorteados); $i++) {
+            if ($i == sizeof($numeros_sorteados) - 1) {
+                print($numeros_sorteados[$i]);
+            }
+            else {
+                printf("%-4s", $numeros_sorteados[$i]);
+            }
+        }
+
+        print("\n");
+    }
+
+    return $quantidade;
+        
+}
+
+function lotofacil($vezes): array {
+
+    $quantidade = array();
+    $totalaposta = 0;
+
+    do {
+
+        do {
+
+            print("\t* Quantos números tu quer?\n");
+            print("O mínimo são 15 números e o máximo são 20. ");
+            $dezenas = readline("");
+
+            if ($dezenas < 15 or $dezenas > 20) {
+                print("\tValor inválido, tente novamente!\n");
+            }
+            else {
+                break;
+            }
+            
+                
+        } while(true);
+
+
+        do {
+
+            $infoaposta = readline("Quantas apostas tu que com essa quantia de números? ");
+
+        } while($totalaposta + $infoaposta > $vezes);
+
+        $totalaposta += $infoaposta; 
+
+        print("\n");
+
+        for($i = 0; $i < $infoaposta; $i++) {
+            array_push($quantidade, $dezenas);
+        }
+
+
+    } while($totalaposta < $vezes);
+
+    sort($quantidade);
+
+    foreach ($quantidade as $dezena) {
+
+        $numeros_sorteados = array();
+
+        $numeros_sorteados = sorteia(1, 25, $dezena);
+
+        sort($numeros_sorteados);
+
+        for ($i = 0; $i < sizeof($numeros_sorteados); $i++) {
+            if ($i == sizeof($numeros_sorteados) - 1) {
+                print($numeros_sorteados[$i]);
+            }
+            else {
+                printf("%-4s", $numeros_sorteados[$i]);
+            }
+        }
+
+        print("\n");
+    }
+    
+    return $quantidade;
+}
+
+function sorteia($minimo, $maximo, $quantidade_numeros): array {
+    $range = range($minimo, $maximo); 
+
+    shuffle($range);
+
+    $result = array_slice($range, 0, $quantidade_numeros);
+
+    return $result;
+
+}
+
+function fazer_cabecalho($titulo) {
+
+    print(str_repeat("-=", 30) . "\n");
+    print("\t* $titulo\n");
+    print(str_repeat("-=", 30));
+    print(str_repeat("\n", 2));
+}
+
+function cabecalho_escolhas($opcoes, $escolha) {
+    $posicao_escolha = $escolha - 1;
+
+    fazer_cabecalho($opcoes[$posicao_escolha]);
+}
